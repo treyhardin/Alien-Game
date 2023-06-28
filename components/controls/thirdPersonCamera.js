@@ -7,24 +7,19 @@ export class ThirdPersonCamera {
     this.camera = camera
     this.player = player
     this.input = input
+    this.clock = getClock()
 
     this.currentPosition = new THREE.Vector3()
     this.currentLookAt = new THREE.Vector3()
-
     this.target = new THREE.Quaternion()
-
-    this._init()
-  }
-
-  _init() {
-    // this.camera.lookAt(this.player.position)
-    // console.log(this.camera)
+    
+    this.lerpSpeed = 0.5
+    this.lookSensitivityY = 0.75
   }
 
   getIdealOffset() {
     const idealOffset = new THREE.Vector3(-0.5, 2.0, -1.5)
     const playerRotation = this.player.rotation.clone()
-    // playerRotation.x += this.input.lookY
     idealOffset.applyEuler(playerRotation)
     idealOffset.add(this.player.position)
     return idealOffset
@@ -33,7 +28,7 @@ export class ThirdPersonCamera {
   getIdealLookAt() {
     const idealLookAt = new THREE.Vector3(0, 1, 2.5)
     const playerRotation = this.player.rotation.clone()
-    // playerRotation.x += this.input.lookY
+    idealLookAt.y += - this.input.lookY * this.lookSensitivityY
     idealLookAt.applyEuler(playerRotation)
     idealLookAt.add(this.player.position)
     return idealLookAt
@@ -41,20 +36,16 @@ export class ThirdPersonCamera {
 
   update() {
 
-    // console.log(this.target)
-
-    // this.target.x = Math.PI / 2
-    // this.target.setFromEuler(new THREE.Euler(this.input.lookY, 0, 0, 'YXZ'))
-    // const cameraPosition = this.player.position.clone() + this.xcameraOffset.clone()
-    // console.log(this.target)
-
     const idealOffset = this.getIdealOffset()
     const idealLookAt = this.getIdealLookAt()
 
-    // idealLookAt.add(0.2, 0, 0)
+    const lerpStrength = (1 - Math.pow(0.001, this.clock.elapsedTime)) * this.lerpSpeed
 
-    this.camera.position.copy(idealOffset)
-    this.camera.lookAt(idealLookAt)
+    this.currentLookAt.lerp(idealLookAt, lerpStrength)
+    this.currentPosition.lerp(idealOffset, lerpStrength)
+
+    this.camera.position.copy(this.currentPosition)
+    this.camera.lookAt(this.currentLookAt)
   }
 
 }

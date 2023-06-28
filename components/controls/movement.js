@@ -10,15 +10,12 @@ export class Movement {
 
     this.direction = new THREE.Vector3(0, 0, 0)
     this.speed = 5
-
-    this.sprint = false
+    this.sprintSpeed = 5
 
   }
   update() {
 
     const deltaTime = this.clock.getDelta()
-
-    // console.log(this.mesh.rotation)
 
     this.mesh.rotation.y = - this.input.lookX * Math.PI
 
@@ -26,13 +23,18 @@ export class Movement {
     this.direction.y = this.input.inputY
     this.direction.z = this.input.inputZ
     this.direction.normalize()
-    // this.direction *= this.mesh.rotation
 
-    // this.mesh.position.x += this.direction.x * this.speed * deltaTime
-    // this.mesh.position.y += this.direction.y * this.speed * deltaTime
-    // this.mesh.position.z += this.direction.z * this.speed * deltaTime
-    this.mesh.translateX(this.direction.x * this.speed * deltaTime)
-    this.mesh.translateZ(this.direction.z * this.speed * deltaTime)
+    // console.log(this.direction)
+
+    if (this.input.sprint) {
+      this.mesh.translateX(this.direction.x * this.speed * deltaTime)
+      this.mesh.translateZ(this.direction.z * this.speed * deltaTime)
+    } else {
+      this.mesh.translateX(this.direction.x * this.sprintSpeed * deltaTime)
+      this.mesh.translateZ(this.direction.z * this.sprintSpeed * deltaTime)
+    }
+
+    // this.mesh.rotation.copy(this.direction)
   }
 
 }

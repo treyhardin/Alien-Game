@@ -9,7 +9,6 @@ import { Input } from '../controls/input';
 import { getClock } from '../../utils/clock';
 import { ThirdPersonCamera } from '../controls/thirdPersonCamera';
 
-// export const initPlayer = (scene) => {
 export class Player {
 
   constructor(scene, camera) {
@@ -23,8 +22,6 @@ export class Player {
 
     const gltfLoader = getGLTFLoader()
     const textureLoader = getTextureLoader()
-
-    
 
     // Load Model
     const playerModel = gltfLoader.load('/models/Player.glb', (model) => {
@@ -112,8 +109,6 @@ export class Player {
         mesh.position.set(0, 0, 0)
         this.mesh = mesh
 
-        
-
         // Setup Controls
         this.input = new Input(this)
 
@@ -125,7 +120,6 @@ export class Player {
         this.thirdPersonCamera = new ThirdPersonCamera(this.camera, this.mesh, this.input)
 
         this.scene.add(mesh)
-
 
         // Render Loop
         const animate = () => {
